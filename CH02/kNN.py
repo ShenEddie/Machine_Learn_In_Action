@@ -9,6 +9,12 @@ from typing import Tuple, List, Union, Iterable
 
 
 def create_dataset() -> Tuple[np.ndarray, List[str]]:
+    """
+    Create dataset for classification.
+
+    Returns:
+        Groups of features and labels for each group.
+    """
     group = np.array([
         [1.0, 1.1],
         [1.0, 1.0],
@@ -21,8 +27,20 @@ def create_dataset() -> Tuple[np.ndarray, List[str]]:
 
 def classify0(in_X: Union[np.ndarray, Iterable, int, float],
               dataset: np.ndarray,
-              labels: List[str],
-              k: int):
+              labels: List[Union[str, int]],
+              k: int) -> Union[str, int]:
+    """
+    kNN algorithm.
+
+    Args:
+        in_X: The features for the item to be classified.
+        dataset: The train set.
+        labels: The labels of each group in train set.
+        k: The parameter k for kNN method.
+
+    Returns:
+        The predicted class of "in_X".
+    """
     dataset_size = dataset.shape[0]
     diff_mat = np.tile(in_X, (dataset_size, 1)) - dataset
     sq_diff_mat = diff_mat ** 2
