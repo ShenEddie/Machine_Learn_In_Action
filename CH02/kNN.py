@@ -55,18 +55,21 @@ def classify0(in_X: Union[np.ndarray, Iterable, int, float],
     return sorted_class_count[0][0]
 
 
-def file2matrix(filename: str) -> Tuple[np.ndarray, List[int]]:
+def file2matrix(filename: str) -> Tuple[np.ndarray, List[Union[int, str]]]:
     fr = open(filename)
     lines = fr.readlines()
     number_of_lines = len(lines)
     number_of_features = len(lines[0].split('\t')) - 1
     return_mat = np.empty((number_of_lines, number_of_features))
-    class_label_vector = []
+    class_label_vector: List[Union[int, str]] = []
     index = 0
     for line in lines:
         line = line.strip()
         list_from_line = line.split('\t')
         return_mat[index, :] = list_from_line[0:number_of_features]
-        class_label_vector.append(int(list_from_line[-1]))
+        if list_from_line[-1].isdigit():
+            class_label_vector.append(int(list_from_line[-1]))
+        else:
+            class_label_vector.append(list_from_line[-1])
         index += 1
     return return_mat, class_label_vector
