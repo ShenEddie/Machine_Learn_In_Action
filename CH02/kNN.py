@@ -56,6 +56,15 @@ def classify0(in_X: Union[np.ndarray, Iterable, int, float],
 
 
 def file2matrix(filename: str) -> Tuple[np.ndarray, List[Union[int, str]]]:
+    """
+    Read features and labels from a txt file.
+
+    Args:
+        filename: The path of the txt file which contains the dataset.
+
+    Returns:
+        The array of features and the list of labels.
+    """
     fr = open(filename)
     lines = fr.readlines()
     number_of_lines = len(lines)
@@ -73,3 +82,22 @@ def file2matrix(filename: str) -> Tuple[np.ndarray, List[Union[int, str]]]:
             class_label_vector.append(list_from_line[-1])
         index += 1
     return return_mat, class_label_vector
+
+
+def auto_norm(dataset: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Normalize the dataset.
+
+    Args:
+        dataset: The dataset of add features.
+
+    Returns:
+        Normalized dataset, Ranges between maximums and minimums, minimums.
+    """
+    min_values = dataset.min(0, initial=None)
+    max_values = dataset.max(0, initial=None)
+    ranges = max_values - min_values
+    m = dataset.shape[0]
+    normed_dataset = dataset - np.tile(min_values, (m, 1))
+    normed_dataset = normed_dataset / np.tile(ranges, (m, 1))
+    return normed_dataset, ranges, min_values
