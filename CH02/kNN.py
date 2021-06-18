@@ -101,3 +101,35 @@ def auto_norm(dataset: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     normed_dataset = dataset - np.tile(min_values, (m, 1))
     normed_dataset = normed_dataset / np.tile(ranges, (m, 1))
     return normed_dataset, ranges, min_values
+
+
+def dating_class_test(filename: str, ho_ratio: float = 0.1) -> float:
+    """
+    Calculate the error rate for kNN.
+
+    Args:
+        filename: The path of the txt file which contains the dataset.
+        ho_ratio: The proportion of data to be placed to the test set.
+
+    Returns:
+        The total error rate.
+    """
+    dating_data_mat, dating_labels = file2matrix(filename)
+    normed_mat, ranges, min_values = auto_norm(dating_data_mat)
+    m = normed_mat.shape[0]
+    num_test_vectors = int(m * ho_ratio)
+    error_count = 0
+    for i in range(num_test_vectors):
+        classified_res = classify0(
+            normed_mat[i, :],
+            normed_mat[num_test_vectors:m, :],
+            dating_labels[num_test_vectors:m],
+            k=3
+        )
+        print("{}: The classifier came back with: {}, The real answer is: {}".format(
+            i, classified_res, dating_labels[i]
+        ))
+        if classified_res != dating_labels[i]:
+            error_count += 1
+    print("The total error rate is: {}".format(error_count / num_test_vectors))
+    return error_count / num_test_vectors
