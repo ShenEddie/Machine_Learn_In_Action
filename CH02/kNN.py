@@ -103,12 +103,13 @@ def auto_norm(dataset: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     return normed_dataset, ranges, min_values
 
 
-def dating_class_test(filename: str, ho_ratio: float = 0.1) -> float:
+def dating_class_test(filename: str, k: int = 3, ho_ratio: float = 0.1) -> float:
     """
     Calculate the error rate for kNN.
 
     Args:
         filename: The path of the txt file which contains the dataset.
+        k: The parameter k for kNN method.
         ho_ratio: The proportion of data to be placed to the test set.
 
     Returns:
@@ -124,7 +125,7 @@ def dating_class_test(filename: str, ho_ratio: float = 0.1) -> float:
             normed_mat[i, :],
             normed_mat[num_test_vectors:m, :],
             dating_labels[num_test_vectors:m],
-            k=3
+            k
         )
         print("{}: The classifier came back with: {}, The real answer is: {}".format(
             i, classified_res, dating_labels[i]
@@ -133,3 +134,23 @@ def dating_class_test(filename: str, ho_ratio: float = 0.1) -> float:
             error_count += 1
     print("The total error rate is: {}".format(error_count / num_test_vectors))
     return error_count / num_test_vectors
+
+
+def classify_person(filename: str, k: int = 3):
+    """
+    kNN: classify person.
+
+    Args:
+        filename: The path of the txt file which contains the dataset.
+        k: The parameter k for kNN method.
+    """
+    result_list = ['not at all', 'in small doses', 'in large doses']
+    percent_tats = float(input("percentage of time spent playing video games?"))
+    ff_miles = float(input("frequent flier miles earned per year?"))
+    ice_cream = float(input("liters of ice cream consumed per year?"))
+    dating_data_mat, dating_labels = file2matrix(filename)
+    normed_mat, ranges, min_values = auto_norm(dating_data_mat)
+    in_arr = np.array([ff_miles, percent_tats, ice_cream])
+    in_arr = (in_arr - min_values) / ranges
+    classifier_res = classify0(in_arr, normed_mat, dating_labels, k)
+    print("You will probably like this person: {}".format(result_list[classifier_res - 1]))

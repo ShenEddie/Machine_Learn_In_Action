@@ -9,3 +9,5 @@ dating_data_mat, dating_labels = kNN.file2matrix('./CH02/datingTestSet.txt')
 norm_mat, ranges, min_values = kNN.auto_norm(dating_data_mat)
 
 kNN.dating_class_test('./CH02/datingTestSet.txt')
+
+kNN.classify_person('./CH02/datingTestSet2.txt')
