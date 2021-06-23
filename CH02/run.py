@@ -11,3 +11,5 @@ norm_mat, ranges, min_values = kNN.auto_norm(dating_data_mat)
 kNN.dating_class_test('./CH02/datingTestSet.txt')
 
 kNN.classify_person('./CH02/datingTestSet2.txt')
+
+test_vec = kNN.img2vector('./CH02/digits/testDigits/0_13.txt')

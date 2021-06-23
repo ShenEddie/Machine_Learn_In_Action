@@ -154,3 +154,13 @@ def classify_person(filename: str, k: int = 3):
     in_arr = (in_arr - min_values) / ranges
     classifier_res = classify0(in_arr, normed_mat, dating_labels, k)
     print("You will probably like this person: {}".format(result_list[classifier_res - 1]))
+
+
+def img2vector(filename: str) -> np.ndarray:
+    return_vec = np.zeros((1, 1024))
+    with open(filename) as fr:
+        for i in range(32):
+            line_str = fr.readline()
+            for j in range(32):
+                return_vec[0, 32 * i + j] = int(line_str[j])
+    return return_vec
