@@ -3,6 +3,7 @@ The functions for KNN algorithm.
 """
 __all__ = ['create_dataset', 'classify0', 'file2matrix']
 
+import os
 import numpy as np
 import operator
 from typing import Tuple, List, Union, Iterable
@@ -164,3 +165,42 @@ def img2vector(filename: str) -> np.ndarray:
             for j in range(32):
                 return_vec[0, 32 * i + j] = int(line_str[j])
     return return_vec
+
+
+def handwriting_class_test(train_dir: str, test_dir: str):
+    """
+    Test kNN algorithm in handwriting example.
+
+    Args:
+        train_dir: The directory of training set files.
+        test_dir: The directory of test set files.
+
+    Returns:
+        The error counts and error rate.
+    """
+    hw_labels = []
+    training_file_list = os.listdir(train_dir)
+    m = len(training_file_list)
+    training_mat = np.zeros((m, 1024))
+    for i in range(m):
+        file_name_str = training_file_list[i]
+        file_str = os.path.splitext(file_name_str)[0]
+        class_num_str = int(file_str.split('_')[0])
+        hw_labels.append(class_num_str)
+        training_mat[i, :] = img2vector(os.path.join(train_dir, file_name_str))
+
+    test_file_list = os.listdir(test_dir)
+    error_count = 0
+    m_test = len(test_file_list)
+    for i in range(m_test):
+        file_name_str = test_file_list[i]
+        file_str = os.path.splitext(file_name_str)[0]
+        class_num_str = int(file_str.split('_')[0])
+        vec_under_test = img2vector(os.path.join(test_dir, file_name_str))
+        classifier_res = classify0(vec_under_test, training_mat, hw_labels, 3)
+        print("{}: The classifier came back with: {}, the real answer is: {}".format(i, classifier_res, class_num_str))
+        if classifier_res != class_num_str:
+            error_count += 1
+
+    print("The total number of errors is: {}".format(error_count))
+    print("The total error rate is: {}".format(error_count / m_test))

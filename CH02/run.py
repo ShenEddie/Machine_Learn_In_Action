@@ -13,3 +13,5 @@ kNN.dating_class_test('./CH02/datingTestSet.txt')
 kNN.classify_person('./CH02/datingTestSet2.txt')
 
 test_vec = kNN.img2vector('./CH02/digits/testDigits/0_13.txt')
+
+kNN.handwriting_class_test('./CH02/digits/trainingDigits', './CH02/digits/testDigits')
