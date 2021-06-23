@@ -167,13 +167,14 @@ def img2vector(filename: str) -> np.ndarray:
     return return_vec
 
 
-def handwriting_class_test(train_dir: str, test_dir: str):
+def handwriting_class_test(train_dir: str, test_dir: str, k: int = 3):
     """
     Test kNN algorithm in handwriting example.
 
     Args:
         train_dir: The directory of training set files.
         test_dir: The directory of test set files.
+        k: The parameter k in kNN algorithm.
 
     Returns:
         The error counts and error rate.
@@ -197,7 +198,7 @@ def handwriting_class_test(train_dir: str, test_dir: str):
         file_str = os.path.splitext(file_name_str)[0]
         class_num_str = int(file_str.split('_')[0])
         vec_under_test = img2vector(os.path.join(test_dir, file_name_str))
-        classifier_res = classify0(vec_under_test, training_mat, hw_labels, 3)
+        classifier_res = classify0(vec_under_test, training_mat, hw_labels, k)
         print("{}: The classifier came back with: {}, the real answer is: {}".format(i, classifier_res, class_num_str))
         if classifier_res != class_num_str:
             error_count += 1
