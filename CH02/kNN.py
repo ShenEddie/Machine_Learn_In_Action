@@ -1,7 +1,8 @@
 """
 The functions for KNN algorithm.
 """
-__all__ = ['create_dataset', 'classify0', 'file2matrix']
+__all__ = ['create_dataset', 'classify0', 'file2matrix', 'auto_norm', 'dating_class_test', 'classify_person',
+           'img2vector', 'handwriting_class_test']
 
 import os
 import numpy as np
