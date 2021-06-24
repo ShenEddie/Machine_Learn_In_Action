@@ -1,7 +1,8 @@
 """
 The functions for decision tree algorithm.
 """
-__all__ = ['cal_shannon_ent', 'create_dataset', 'split_dataset']
+__all__ = ['cal_shannon_ent', 'create_dataset', 'split_dataset',
+           'choose_best_feature_to_split']
 
 from math import log2
 from typing import List, Union, Tuple
@@ -49,6 +50,17 @@ def split_dataset(dataset: List[List[Union[int, str]]],
                   axis: int,
                   value: Union[int, str]
                   ) -> List[List[Union[int, str]]]:
+    """
+    Split dataset.
+
+    Args:
+        dataset: The dataset to be split.
+        axis: The axis of chosen feature.
+        value: The value of chosen feature to be returned.
+
+    Returns:
+        The split dataset.
+    """
     ret_dataset = []
     for feat_vec in dataset:
         if feat_vec[axis] == value:
@@ -56,3 +68,4 @@ def split_dataset(dataset: List[List[Union[int, str]]],
             reduced_feat_vac.extend(feat_vec[axis + 1:])
             ret_dataset.append(reduced_feat_vac)
     return ret_dataset
+
