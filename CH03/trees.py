@@ -69,3 +69,31 @@ def split_dataset(dataset: List[List[Union[int, str]]],
             ret_dataset.append(reduced_feat_vac)
     return ret_dataset
 
+
+def choose_best_feature_to_split(dataset: List[List[Union[int, str]]]):
+    """
+    Choose the best feature for splitting data.
+
+    Args:
+        dataset: The dataset to be split.
+
+    Returns:
+        The axis of the best feature.
+    """
+    num_features = len(dataset[0]) - 1
+    base_entropy = cal_shannon_ent(dataset)
+    best_info_gain = 0
+    best_feature = -1
+    for i in range(num_features):
+        feat_list = [example[i] for example in dataset]
+        unique_values = set(feat_list)
+        new_entropy = 0
+        for value in unique_values:
+            sub_dataset = split_dataset(dataset, i, value)
+            prob = len(sub_dataset) / len(dataset)
+            new_entropy += prob * cal_shannon_ent(sub_dataset)  # Weighted avg.
+        info_gain = base_entropy - new_entropy
+        if info_gain > best_info_gain:
+            best_info_gain = info_gain
+            best_feature = i
+    return best_feature
