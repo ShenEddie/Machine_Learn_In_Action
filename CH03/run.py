@@ -11,3 +11,6 @@ trees.split_dataset(my_data, 0, 1)
 trees.split_dataset(my_data, 0, 0)
 
 trees.choose_best_feature_to_split(my_data)
+
+my_data, labels = trees.create_dataset()
+trees.create_tree(my_data, labels)

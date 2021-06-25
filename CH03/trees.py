@@ -2,11 +2,11 @@
 The functions for decision tree algorithm.
 """
 __all__ = ['cal_shannon_ent', 'create_dataset', 'split_dataset',
-           'choose_best_feature_to_split', 'majority_count']
+           'choose_best_feature_to_split', 'majority_count', 'create_tree']
 
 import operator
 from math import log2
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Dict
 
 
 def cal_shannon_ent(dataset: List[List[Union[int, str]]]) -> float:
@@ -71,7 +71,7 @@ def split_dataset(dataset: List[List[Union[int, str]]],
     return ret_dataset
 
 
-def choose_best_feature_to_split(dataset: List[List[Union[int, str]]]):
+def choose_best_feature_to_split(dataset: List[List[Union[int, str]]]) -> int:
     """
     Choose the best feature for splitting data.
 
@@ -100,7 +100,7 @@ def choose_best_feature_to_split(dataset: List[List[Union[int, str]]]):
     return best_feature
 
 
-def majority_count(class_list: List):
+def majority_count(class_list: List) -> Union[int, str]:
     class_count = {}
     for vote in class_list:
         class_count[vote] = class_count.get(vote, 0) + 1
@@ -108,3 +108,36 @@ def majority_count(class_list: List):
                                 key=operator.itemgetter(1),
                                 reverse=True)
     return sorted_class_count[0][0]
+
+
+def create_tree(dataset: List[List[Union[int, str]]],
+                labels: List[str]) -> Union[Dict, int, str]:
+    """
+    Create Decision Tree.
+
+    Args:
+        dataset: The dataset with classes in last column.
+        labels: The names of the features in the dataset.
+
+    Returns:
+        The class of the leaf node or the recursive tree.
+    """
+    class_list = [example[-1] for example in dataset]
+    # Condition 1: All classes are the same.
+    if class_list.count(class_list[0]) == len(class_list):
+        return class_list[0]
+    # Condition 2: No available features.
+    if len(dataset[0]) == 1:
+        return majority_count(class_list)
+    best_feat = choose_best_feature_to_split(dataset)
+    best_feat_label = labels[best_feat]
+    my_tree = {best_feat_label: {}}
+    del labels[best_feat]
+    feat_value = [example[best_feat] for example in dataset]
+    unique_values = set(feat_value)
+    for value in unique_values:
+        sub_labels = labels[:]
+        my_tree[best_feat_label][value] = create_tree(
+            split_dataset(dataset, best_feat, value), sub_labels
+        )
+    return my_tree
