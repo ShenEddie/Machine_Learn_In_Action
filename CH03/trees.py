@@ -2,8 +2,9 @@
 The functions for decision tree algorithm.
 """
 __all__ = ['cal_shannon_ent', 'create_dataset', 'split_dataset',
-           'choose_best_feature_to_split']
+           'choose_best_feature_to_split', 'majority_count']
 
+import operator
 from math import log2
 from typing import List, Union, Tuple
 
@@ -97,3 +98,13 @@ def choose_best_feature_to_split(dataset: List[List[Union[int, str]]]):
             best_info_gain = info_gain
             best_feature = i
     return best_feature
+
+
+def majority_count(class_list: List):
+    class_count = {}
+    for vote in class_list:
+        class_count[vote] = class_count.get(vote, 0) + 1
+    sorted_class_count = sorted(class_count.items(),
+                                key=operator.itemgetter(1),
+                                reverse=True)
+    return sorted_class_count[0][0]
