@@ -1,8 +1,9 @@
 """
 The functions for KNN algorithm.
 """
-__all__ = ['create_dataset', 'classify0', 'file2matrix', 'auto_norm', 'dating_class_test', 'classify_person',
-           'img2vector', 'handwriting_class_test']
+__all__ = ['create_dataset', 'classify0', 'file2matrix', 'auto_norm',
+           'dating_class_test', 'classify_person', 'img2vector',
+           'handwriting_class_test']
 
 import os
 import numpy as np
@@ -53,7 +54,9 @@ def classify0(in_X: Union[np.ndarray, Iterable, int, float],
     for i in range(k):
         vote_i_label = labels[sorted_dist_indices[i]]
         class_count[vote_i_label] = class_count.get(vote_i_label, 0) + 1
-    sorted_class_count = sorted(class_count.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_class_count = sorted(class_count.items(),
+                                key=operator.itemgetter(1),
+                                reverse=True)
     return sorted_class_count[0][0]
 
 
@@ -105,7 +108,9 @@ def auto_norm(dataset: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     return normed_dataset, ranges, min_values
 
 
-def dating_class_test(filename: str, k: int = 3, ho_ratio: float = 0.1) -> float:
+def dating_class_test(filename: str,
+                      k: int = 3,
+                      ho_ratio: float = 0.1) -> float:
     """
     Calculate the error rate for kNN.
 
@@ -129,7 +134,8 @@ def dating_class_test(filename: str, k: int = 3, ho_ratio: float = 0.1) -> float
             dating_labels[num_test_vectors:m],
             k
         )
-        print("{}: The classifier came back with: {}, The real answer is: {}".format(
+        print("{}: The classifier came back with: {}, "
+              "The real answer is: {}".format(
             i, classified_res, dating_labels[i]
         ))
         if classified_res != dating_labels[i]:
@@ -155,7 +161,8 @@ def classify_person(filename: str, k: int = 3):
     in_arr = np.array([ff_miles, percent_tats, ice_cream])
     in_arr = (in_arr - min_values) / ranges
     classifier_res = classify0(in_arr, normed_mat, dating_labels, k)
-    print("You will probably like this person: {}".format(result_list[classifier_res - 1]))
+    print("You will probably like this person: {}".format(
+        result_list[classifier_res - 1]))
 
 
 def img2vector(filename: str) -> np.ndarray:
@@ -200,7 +207,8 @@ def handwriting_class_test(train_dir: str, test_dir: str, k: int = 3):
         class_num_str = int(file_str.split('_')[0])
         vec_under_test = img2vector(os.path.join(test_dir, file_name_str))
         classifier_res = classify0(vec_under_test, training_mat, hw_labels, k)
-        print("{}: The classifier came back with: {}, the real answer is: {}".format(i, classifier_res, class_num_str))
+        print("{}: The classifier came back with: {}, "
+              "the real answer is: {}".format(i, classifier_res, class_num_str))
         if classifier_res != class_num_str:
             error_count += 1
 
